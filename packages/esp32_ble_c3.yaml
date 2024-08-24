@@ -1,16 +1,4 @@
-substitutions:
-  board: esp32-c3-devkitm-1
 
+# this package is deprecated, please use esp32_c3_uart.yaml
 packages:
-  tion.esp32_ble: !include esp32_ble.yaml
-
-esphome:
-  platformio_options:
-    board_build.flash_mode: dio
-
-esp32_ble:
-  enable_on_boot: false
-
-wifi:
-  on_connect:
-    - ble.enable
+  tion.esp32_s3_uart: !include esp32_c3_ble.yaml

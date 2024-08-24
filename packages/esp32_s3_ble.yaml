@@ -1,0 +1,9 @@
+substitutions:
+  board: esp32-s3-devkitc-1
+
+packages:
+  tion.esp32_ble: !include esp32_ble.yaml
+
+esphome:
+  platformio_options:
+    board_build.flash_mode: dio
