@@ -240,6 +240,7 @@ button:
     type: reset_filter
     name: Reset Filter
     # Reset filter confirmation. When off then reset_filter will not work.
+    # Has no effect if spruthub.yaml is enabled.
     confirm:
       name: Reset Filter Confirm
 
