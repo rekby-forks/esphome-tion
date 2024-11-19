@@ -240,6 +240,7 @@ bool TionClimate::set_fan_speed_(int8_t fan_speed) {
       this->custom_fan_mode = fan_speed_to_mode(fan_speed);
       return true;
     }
+    return false;
   }
 
   ESP_LOGW(TAG, "Unsupported fan speed: %u (max: %u)", fan_speed, this->parent_->traits().max_fan_speed);
