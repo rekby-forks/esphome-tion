@@ -68,8 +68,10 @@ packages:
       - packages/restart.yaml
       ## Tion type package
       - packages/tion_{{ type }}.yaml
+      {%- if type not in ["4s"] %}
       ## Unlock Tion 30°C heating.
       #- packages/tion_temperature30c.yaml
+      {%- endif -%}
       {%- if type != "3s" %}
       ## Additional energy sensor.
       ## !!! Be sure to change substitutions.time_platform to "sntp" if you use it with MQTT.
