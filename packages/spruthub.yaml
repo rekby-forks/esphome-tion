@@ -3,3 +3,6 @@ esphome:
     build_flags:
       # Включаем поддержку работы со SprutHub
       - -DTION_SPRUTHUB_SUPPORT
+
+mqtt:
+  discovery: false

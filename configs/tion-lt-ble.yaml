@@ -14,11 +14,11 @@ substitutions:
   wifi_password: !secret wifi_password
   # WiFi Access Point password.
   wifi_ap_password: tion-0123-lt
-  project_source_refresh: 0s
+  project_source_refresh: 0s # required only for "next"
 
 packages:
   tion:
-    refresh: 0s
+    refresh: 0s # required only for "next"
     url: https://github.com/dentra/esphome-tion
     ref: next # cant use substitutions here
     files:
@@ -58,15 +58,15 @@ packages:
       ## Additional debug information.
       # - packages/debug.yaml
 
-# Uncomment to enable MQTT connection.
+# Uncomment to enable MQTT connection and remove api section next.
 # mqtt:
 #   broker: !secret mqtt_broker
 #   port: !secret mqtt_port
 #   username: !secret mqtt_username
 #   password: !secret mqtt_password
-#   discovery: false # remove or set to true if you plan to use with Home Assistant
 
-# Enable Home Assistant API connection. Please disable if you use MQTT
+# Enable Home Assistant API connection.
+# It is strongly recommended to remove if you use MQTT!!!
 api:
 
 # WiFi access point configuration.
