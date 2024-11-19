@@ -488,7 +488,8 @@ void TionApiBase::enable_boost(bool state, TionStateCall *call) {
     return;
   }
 
-  this->enable_boost(this->traits_.boost_time, call);
+  const uint16_t new_boost_time = state ? this->traits_.boost_time : 0U;
+  this->enable_boost(new_boost_time, call);
 }
 
 void TionApiBase::enable_boost(uint16_t boost_time, TionStateCall *call) {
