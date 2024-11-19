@@ -135,15 +135,15 @@ packages:
     refresh: {{ packages_refresh }}
     {%- endif %}
 
-# Uncomment to enable MQTT connection.
+# Uncomment to enable MQTT connection and remove api section next.
 # mqtt:
 #   broker: !secret mqtt_broker
 #   port: !secret mqtt_port
 #   username: !secret mqtt_username
 #   password: !secret mqtt_password
-#   discovery: false # remove or set to true if you plan to use with Home Assistant
 
-# Enable Home Assistant API connection. Please disable if you use MQTT
+# Enable Home Assistant API connection.
+# It is strongly recommended to remove if you use MQTT!!!
 api:
 
 # WiFi access point configuration.
