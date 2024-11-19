@@ -1,3 +1,6 @@
 substitutions:
   tion_type: 4s
   tion_model: 4S
+
+packages:
+  tion.temp30: !include tion_temperature30c.yaml
