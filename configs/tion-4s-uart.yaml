@@ -12,9 +12,11 @@ substitutions:
   wifi_password: !secret wifi_password
   # WiFi Access Point password.
   wifi_ap_password: tion-0123-4s
+  project_source_refresh: 0s
 
 packages:
   tion:
+    refresh: 0s
     url: https://github.com/dentra/esphome-tion
     ref: 2024.8.0 # cant use substitutions here
     files:

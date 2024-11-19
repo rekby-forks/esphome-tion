@@ -46,9 +46,15 @@ substitutions:
   {%- if (project_version|length) > 0 %}
   project_version: {{ project_version }}
   {%- endif %}
+  {%- if version_tion == "next" %}
+  project_source_refresh: 0s # required only for "next"
+  {%- endif %}
 
 packages:
   tion:
+    {%- if version_tion == "next" %}
+    refresh: 0s # required only for "next"
+    {%- endif %}
     url: https://github.com/dentra/esphome-tion
     ref: {{ version_tion }} # cant use substitutions here
     files:
