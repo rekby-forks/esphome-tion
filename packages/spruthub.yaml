@@ -1,0 +1,5 @@
+esphome:
+  platformio_options:
+    build_flags:
+      # Включаем поддержку работы со SprutHub
+      - -DTION_SPRUTHUB_SUPPORT

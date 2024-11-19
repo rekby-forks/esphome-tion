@@ -75,7 +75,11 @@ setup:
           .topic = log_topic, .payload = "", .qos = 0, .retain = true
         });
       }
+      #ifdef TION_SPRUTHUB_SUPPORT
+      auto status_topic = topic_prefix + "/tion-status";
+      #else
       auto status_topic = topic_prefix + "/status";
+      #endif
       p_mqtt->set_birth_message(mqtt::MQTTMessage{
         .topic = status_topic, .payload = "online", .qos = 0, .retain = true
       });
