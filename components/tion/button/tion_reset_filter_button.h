@@ -24,7 +24,11 @@ class TionResetFilterButton : public TionButton<property_controller::button::Res
     }
   }
 
-  void set_confirm(switch_::Switch *confirm) { this->confirm_ = confirm; }
+  void set_confirm(switch_::Switch *confirm) {
+#ifndef TION_SPRUTHUB_SUPPORT
+    this->confirm_ = confirm;
+#endif
+  }
 
  protected:
   switch_::Switch *confirm_{};
@@ -34,7 +38,7 @@ class TionResetFilterButton : public TionButton<property_controller::button::Res
       TionButton::press_action();
     }
   }
-#endif
+#endif  // USE_SWITCH
 };
 
 #ifdef USE_SWITCH
@@ -54,7 +58,7 @@ template<class parent_t> class TionResetFilterConfirmSwitch : public Parented<pa
     this->publish_state(state);
   }
 };
-#endif
+#endif  // USE_SWITCH
 
 }  // namespace tion
 }  // namespace esphome
