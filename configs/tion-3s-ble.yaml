@@ -1,24 +1,23 @@
 substitutions:
-  # Tion mac address. Setup yours.
+  ## Tion mac address. Setup yours.
   tion_mac_address: 00:00:00:00:00:00
-  # Name of the node. Don't use underscores!
-  # https://esphome.io/guides/faq.html#why-shouldn-t-i-use-underscores-in-my-device-name
+  ## Name of the node. Don't use underscores!
+  ## https://esphome.io/guides/faq.html#why-shouldn-t-i-use-underscores-in-my-device-name
   node_name: tion-3s
-  # Name for the main entity and prefix for all others.
+  ## Name for the main entity and prefix for all others.
   friendly_name: $node_name
-  # Change to sntp if you plan to use MQTT and tion_energy package.
-  time_platform: homeassistant
 
-  # WiFi settings.
+  ## WiFi settings.
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  # WiFi Access Point password.
+  ## WiFi Access Point password.
   wifi_ap_password: tion-0123-3s
-  project_source_refresh: 0s # required only for "next"
+
+  project_source_refresh: 0s
 
 packages:
   tion:
-    refresh: 0s # required only for "next"
+    refresh: 0s
     url: https://github.com/dentra/esphome-tion
     ref: next # cant use substitutions here
     files:
@@ -34,57 +33,73 @@ packages:
       - packages/uptime.yaml
       ## Additional Restart button.
       - packages/restart.yaml
-      ## Tion type package
-      - packages/tion_3s.yaml
-      ## Unlock Tion 30°C heating.
-      #- packages/tion_temperature30c.yaml
+      ## Additional virtual energy sensor.
+      ## !!! Be sure to uncomment mqtt.yaml if you use it with MQTT.
+      #- packages/tion_energy.yaml
+      
       ## Antifreeze protection. Automatically turns on the heater at a temperature of 0°C and below.
       - packages/tion_enable_antifreeze.yaml
       ## Common configuration settings. Do not comment or move or remove!
       - packages/base.yaml
-      ## Change to esp32_s3.yaml/esp32_c3.yaml to use with ESP32-S3/ESP32-C3 chip.
+      ## Base platform support package:
+      ## esp32_s3_ble.yaml - ESP32-S3
+      ## esp32_c3_ble.yaml - ESP32-C3
+      ## esp32_c6_ble.yaml - ESP32-C6
+      ## esp32_ble.yaml - ESP32
       - packages/esp32_ble.yaml
       ## Persistent connection runtime control switch.
       # - packages/persistent.yaml
       ## Additional connect switch useful for debugging.
       # - packages/connect.yaml
       ## Internal ESP32 temperature sensor.
-      # - packages/esp32_temperature.yaml
-      ## Lilygo T-Dongle S3 internal LED and button support
+      #- packages/esp32_temperature.yaml
+      ## Uncomment to use it with SprutHub.
+      # - packages/spruthub.yaml
+      ## Uncomment to use MQTT. Already included with spruthub.yaml
+      # - packages/mqtt.yaml
+      ## Lilygo T-Dongle S3 support package.
       # - packages/lilygo.yaml
+      ## XIAO SEEED ESP32-C6 support package.
+      # - packages/seeed_c6.yaml
       ## Web server support.
-      # - packages/web_server.yaml
+      #- packages/web_server.yaml
       ## Additional debug information.
       # - packages/debug.yaml
+      ## Tion type package. Do not comment or move or remove!
+      - packages/tion_3s.yaml
 
-# Uncomment to enable MQTT connection and remove api section next.
+## Uncomment to enable MQTT connection and remove api section.
+## Do not forget to uncomment mqtt.yaml or if you plan to use SprutHub spruthub.yaml package above.
 # mqtt:
 #   broker: !secret mqtt_broker
 #   port: !secret mqtt_port
 #   username: !secret mqtt_username
 #   password: !secret mqtt_password
 
-# Enable Home Assistant API connection.
-# It is strongly recommended to remove if you use MQTT!!!
+## Enable Home Assistant API connection.
+## It is strongly recommended to remove if you use MQTT!!!
 api:
+  ## Uncomment next line if you do not use Home Assistant.
+  #reboot_timeout: 0s
 
-# WiFi access point configuration.
+## WiFi access point configuration.
 wifi:
-  # Comment next 2 lines to enable manual WiFi configuration via access point.
+  ## Comment next 2 lines to enable manual WiFi configuration via access point.
   ssid: $wifi_ssid
   password: $wifi_password
-  # Comment next 2 lines to set access point without password.
+  ## Comment next 2 lines to set access point without password.
   ap:
     password: $wifi_ap_password
-  # To completely remove access point remove previous two lines and uncomment next one.
+  ## To completely remove access point remove previous two lines and uncomment next one.
   #ap: !remove
 
-# Virtual port configuration
+## Virtual port configuration.
 vport:
   - platform: tion_3s_ble
     id: tion_ble_vport
     ble_client_id: tion_ble_client
     ## Optional, Do not disconnect after receiving state. Default: false.
+    ## You can enable persistent.yaml package to control it at runtime.
     persistent_connection: false
     ## Optional, Allow to disable other BLE device scanning when breezer is already connected. Default: false.
     # disable_scan: false
@@ -95,100 +110,107 @@ vport:
     ## Optional, Command queue size. Default: 10.
     # command_queue_size: 16
 
-# Main climate component configuration.
-# See detailed description and additional parameters at CONFIGURATION.md
+## Main climate component configuration.
+## See detailed description and additional parameters at CONFIGURATION.md
 tion:
   type: 3s
   id: tion_api
-  # Optional, use vport_id with multiple breezers.
+  ## Optional, use vport_id with multiple breezers.
   vport_id: tion_ble_vport
-  # Optional, How often query device state. Default: 60s.
+  ## Optional, How often query device state. Default: 60s.
   update_interval: 60s
-  # Optional, Timeout to combine update operations. Default: 200ms.
+  ## Optional, Timeout to combine update operations. Default: 200ms.
   batch_timeout: 200ms
-  # Optional, Timeout to enable state problem sensor. Must be less than update_interval. Default: 3s.
+  ## Optional, Timeout to enable state problem sensor. Must be less than update_interval. Default: 3s.
   state_timeout: 30s
-  # Optional, Updates sensor values on any state response or only if they have been changed. Default: false.
+  ## Optional, Updates sensor values on any state response or only if they have been changed. Default: false.
   force_update: false
 
-  # Optional, Enable presets. Default: <empty> (no presets)
-  # You can define any number of presets with any name.
-  # In Home assistant climate entity presets with names home, away, boost, comfort,
-  # eco, sleep and activity are automatically translated to your native language and assign icons.
-  # Preset configuration:
-  #  name_of_your_preset:
-  #    fan_speed: 1            # remove or set to 0 to use current state
-  #    temperature: 16         # remove or set to 0 to use current state
-  #    heater: False           # remove to use current state
-  #    power: True             #
-  #    gate_position: outdoor  # remove to use current state, see below for available values
-  # Available gate_position:
-  #  * outdoor - set gate position to outdoor air intake (3S and 4S only)
-  #  * indoor - set gate position to indoor air intake (3S and 4S only)
-  #  * mixed - set gate position to mixed air intake (3S only)
-  # Uncomment next 4 lines to enable example presets.
+  ## Optional, Enable presets. Default: <empty> (no presets)
+  ## You can define any number of presets with any name.
+  ## In Home assistant climate entity presets with names home, away, boost, comfort,
+  ## eco, sleep and activity are automatically translated to your native language and assign icons.
+  ## Preset configuration:
+  ##  name_of_your_preset:
+  ##    fan_speed: 1            # remove or set to 0 to use current state
+  ##    temperature: 16         # remove or set to 0 to use current state
+  ##    heater: False           # remove to use current state
+  ##    power: True             #
+  ##    gate_position: outdoor  # remove to use current state, see below for available values
+  ## Available gate_position:
+  ##  * outdoor - set gate position to outdoor air intake (3S and 4S only)
+  ##  * indoor - set gate position to indoor air intake (3S and 4S only)
+  ##  * mixed - set gate position to mixed air intake (3S only)
+  ## Uncomment next 4 lines to enable example presets.
   # presets:
   #   home: { fan_speed: 2, temperature: 16, heater: False }
   #   away: { fan_speed: 1, temperature: 10, heater: False }
   #   sleep: { fan_speed: 1, temperature: 18 }
 
 ################################################################################
-#
-# Next sections set are only example configuration.
-#
-# In most cases it is enough, but if you prefer to customize please refer to
-# CONFIGURATION.md for full set of available entities and options.
-#
+##
+## Next sections set are only example configuration.
+##
+## In most cases it is enough, but if you prefer to customize please refer to
+## CONFIGURATION.md for full set of available entities and options.
+##
 ################################################################################
 
+## Main control entity.
 climate:
   - platform: tion
     id: tion_climate
     name: None # use friendly_name
-    # add HEAT_COOL mode to support turn_on without touching current heater mode.
+    ## Add HEAT_COOL mode to support turn_on without touching current heater mode.
     enable_heat_cool: True
 
+## Example of control with a fan entity. More info at CONFIGURATION.md.
+#fan:
+#  - platform: tion
+#    id: tion_climate
+#    name: Fan
+
 sensor:
-  # Temperature of air before heater, °C (celsius).
+  ## Temperature of air before heater, °C (celsius).
   - platform: tion
     id: tion_outdoor_temperature
     type: outdoor_temperature
     name: Outdoor Temperature
-  # Current productivity, m³/h (cubic meters per hour).
+  ## Current productivity, m³/h (cubic meters per hour).
   - platform: tion
     id: tion_productivity
     type: productivity
     name: Productivity
-  # Filter time left counter.
+  ## Filter time left counter.
   - platform: tion
     id: tion_filter_time_left_days
     type: filter_time_left_days
     name: Filter Time Left
-  # Boost time left sensor.
+  ## Boost time left sensor.
   - platform: tion
     id: tion_boost_time_left
     type: boost_time_left
     name: Boost Time Left
 
 switch:
-  # Buzzer control switch.
+  ## Buzzer control switch.
   - platform: tion
     id: tion_buzzer
     type: sound
     name: Buzzer
-  # Boost/Turbo switch.
+  ## Boost/Turbo switch.
   - platform: tion
     id: tion_boost
     type: boost
     name: Boost
-    # Optional, Heater state when boost enabled. If not set current state will be used.
+    ## Optional, Heater state when boost enabled. If not set current state will be used.
     #heater: False
-    # Optional, Target heater temperature state when boost enabled.
-    #           If not set or set to 0 - current target temperature will be used.
+    ## Optional, Target heater temperature state when boost enabled.
+    ##           If not set or set to 0 - current target temperature will be used.
     #temperature: 10
 
 number:
-  # Configure boost time.
+  ## Configure boost time.
   - platform: tion
     id: tion_boost_time
     type: boost_time
@@ -197,44 +219,45 @@ number:
     restore_value: true
 
 select:
-  # Optional, Air Intake control.
+  ## Optional, Air Intake control.
   - platform: tion
     id: tion_air_intake
     type: air_intake
     name: Air Intake
 
 binary_sensor:
-  # Informs about state receiving problem from the breezer.
+  ## Informs about state receiving problem from the breezer.
   - platform: tion
     id: tion_state_problem
     type: state
     name: State Problem
-  # Filter warning state.
+  ## Filter warning state.
   - platform: tion
     id: tion_filter_worn_out
     type: filter
     name: Filter Worn Out
 
 text_sensor:
-  # Tion firmware version.
+  ## Tion firmware version.
   - platform: tion
     id: tion_firmware_version
     type: firmware_version
     name: Version
-  # Reports Tion's errors (EC) and warnings (WS).
+  ## Reports Tion's errors (EC) and warnings (WS).
+  ## Full error/warning description you can find in a log.
   - platform: tion
     id: tion_errors
     type: errors
     name: Errors
 
 button:
-  # Reset filter button.
+  ## Reset filter button.
   - platform: tion
     id: tion_reset_filter
     type: reset_filter
     name: Reset Filter
-    # Reset filter confirmation. When off then reset_filter will not work.
-    # Has no effect if spruthub.yaml is enabled and can be removed.
+    ## Reset filter confirmation. When off then reset_filter will not work.
+    ## Has no effect if spruthub.yaml is enabled and can be removed in this case.
     confirm:
       name: Reset Filter Confirm
   - platform: template
