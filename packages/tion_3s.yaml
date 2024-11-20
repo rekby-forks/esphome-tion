@@ -1,3 +1,7 @@
 substitutions:
   tion_type: 3s
   tion_model: 3S
+  baud_rate: "115200"
+
+packages:
+  tion.temp30: !include tion_temperature30c.yaml
