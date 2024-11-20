@@ -2,7 +2,7 @@ substitutions:
   board: esp01_1m
   tx_pin: TX
   rx_pin: RX
-  baud_rate: "9600"
+  baud_rate: "115200"
 
 esp8266:
   board: $board

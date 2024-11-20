@@ -1,3 +1,4 @@
 substitutions:
   tion_type: lt
   tion_model: Lite
+  baud_rate: "115200"

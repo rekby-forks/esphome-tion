@@ -1,3 +1,4 @@
 substitutions:
   tion_type: o2
   tion_model: O2 Mac
+  baud_rate: "115200"
