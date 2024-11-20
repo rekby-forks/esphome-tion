@@ -1,13 +1,12 @@
 substitutions:
   proxy_tx_pin: GPIO10
   proxy_rx_pin: GPIO09
-  proxy_baud_rate: "115200"
 
 uart:
   - id: tion_uart_proxy
     tx_pin: $proxy_tx_pin
     rx_pin: $proxy_rx_pin
-    baud_rate: $proxy_baud_rate
+    baud_rate: 115200
 
 tion_3s_proxy:
   uart_id: tion_uart_proxy
