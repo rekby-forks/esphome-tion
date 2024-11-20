@@ -1,3 +1,6 @@
+packages:
+  mqtt: !include mqtt.yaml
+
 esphome:
   platformio_options:
     build_flags:
