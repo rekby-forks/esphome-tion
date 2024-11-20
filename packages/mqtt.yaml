@@ -1,0 +1,4 @@
+substitutions:
+  time_platform: sntp
+
+mqtt:
