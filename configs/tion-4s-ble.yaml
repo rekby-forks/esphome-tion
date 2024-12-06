@@ -13,13 +13,10 @@ substitutions:
   ## WiFi Access Point password.
   wifi_ap_password: tion-0123-4s
 
-  project_source_refresh: 0s
-
 packages:
   tion:
-    refresh: 0s
     url: https://github.com/dentra/esphome-tion
-    ref: 2024.8.0 # cant use substitutions here
+    ref: 2024.12.0 # cant use substitutions here
     files:
       ## You can enable or disable some of the features listed below.
       ## The disabled feature starts with # symbol.
@@ -45,6 +42,8 @@ packages:
       ## esp32_c6_ble.yaml - ESP32-C6
       ## esp32_ble.yaml - ESP32
       - packages/esp32_ble.yaml
+      ## Change to esp32_ble.yaml/esp32_c3_ble.yaml to use with ESP32/ESP32-C3 chip.
+      - packages/esp32_ble_s3.yaml
       ## Persistent connection runtime control switch.
       # - packages/persistent.yaml
       ## Additional connect switch useful for debugging.

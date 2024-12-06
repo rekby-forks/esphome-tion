@@ -13,13 +13,10 @@ substitutions:
   ## WiFi Access Point password.
   wifi_ap_password: tion-0123-lt
 
-  project_source_refresh: 0s
-
 packages:
   tion:
-    refresh: 0s
     url: https://github.com/dentra/esphome-tion
-    ref: 2024.8.0 # cant use substitutions here
+    ref: 2024.12.0 # cant use substitutions here
     files:
       ## You can enable or disable some of the features listed below.
       ## The disabled feature starts with # symbol.
@@ -38,9 +35,15 @@ packages:
       ## Additional  energy sensor.
       ## !!! Be sure to uncomment mqtt.yaml if you use it with MQTT.
       #- packages/tion_energy.yaml
-
+      
       ## Common configuration settings. Do not comment or move or remove!
       - packages/base.yaml
+      ## Base platform support package:
+      ## esp32_s3_ble.yaml - ESP32-S3
+      ## esp32_c3_ble.yaml - ESP32-C3
+      ## esp32_c6_ble.yaml - ESP32-C6
+      ## esp32_ble.yaml - ESP32
+      - packages/esp32_ble.yaml
       ## Change to esp32_s3_ble.yaml/esp32_c3_ble.yaml to use with ESP32-S3/ESP32-C3 chip.
       - packages/esp32_ble.yaml
       ## Persistent connection runtime control switch.
