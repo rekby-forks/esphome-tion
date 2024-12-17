@@ -26,7 +26,7 @@ packages:
   tion:
     refresh: 0s
     url: https://github.com/dentra/esphome-tion
-    ref: 2024.12.0 # cant use substitutions here
+    ref: next # cant use substitutions here
     files:
       ## You can enable or disable some of the features listed below.
       ## The disabled feature starts with # symbol.

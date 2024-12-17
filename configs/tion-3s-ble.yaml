@@ -1,18 +1,16 @@
 substitutions:
-  # Tion mac address. Setup yours.
+  ## Tion mac address. Setup yours.
   tion_mac_address: 00:00:00:00:00:00
-  # Name of the node. Don't use underscores!
-  # https://esphome.io/guides/faq.html#why-shouldn-t-i-use-underscores-in-my-device-name
+  ## Name of the node. Don't use underscores!
+  ## https://esphome.io/guides/faq.html#why-shouldn-t-i-use-underscores-in-my-device-name
   node_name: tion-3s
-  # Name for the main entity and prefix for all others.
+  ## Name for the main entity and prefix for all others.
   friendly_name: $node_name
-  # Change to sntp if you plan to use MQTT and tion_energy package.
-  time_platform: homeassistant
 
   ## WiFi settings.
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  # WiFi Access Point password.
+  ## WiFi Access Point password.
   wifi_ap_password: tion-0123-3s
 
   project_source_refresh: 0s
@@ -21,7 +19,7 @@ packages:
   tion:
     refresh: 0s
     url: https://github.com/dentra/esphome-tion
-    ref: 2024.12.0 # cant use substitutions here
+    ref: next # cant use substitutions here
     files:
       ## You can enable or disable some of the features listed below.
       ## The disabled feature starts with # symbol.
@@ -38,7 +36,7 @@ packages:
       ## Additional virtual energy sensor.
       ## !!! Be sure to uncomment mqtt.yaml if you use it with MQTT.
       #- packages/tion_energy.yaml
-
+      
       ## Antifreeze protection. Automatically turns on the heater at a temperature of 0°C and below.
       - packages/tion_enable_antifreeze.yaml
       ## Common configuration settings. Do not comment or move or remove!
@@ -64,11 +62,9 @@ packages:
       ## XIAO SEEED ESP32-C6 support package.
       # - packages/seeed_c6.yaml
       ## Web server support.
-      # - packages/web_server.yaml
+      #- packages/web_server.yaml
       ## Additional debug information.
       # - packages/debug.yaml
-      ## Tion type package. Do not comment or move or remove!
-      - packages/tion_3s.yaml
       ## Tion type package. Do not comment or move or remove!
       - packages/tion_3s.yaml
 
