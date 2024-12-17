@@ -152,7 +152,7 @@ bool Tion3sApi::request_state_() const {
   return this->write_frame(FRAME_TYPE_REQ(FRAME_TYPE_STATE_GET));
 }
 
-bool Tion3sApi::write_state_(const tion::TionState &state) const {
+bool Tion3sApi::write_state_(const tion::TionState &state) {
   TION_LOGD(TAG, "Request State Set");
   if (!state.is_initialized()) {
     TION_LOGW(TAG, "State was not initialized");
@@ -172,6 +172,9 @@ bool Tion3sApi::write_state_(const tion::TionState &state) const {
   TION_DUMP(TAG, "auto  : %s", ONOFF(st_set.flags.ma_auto));
   TION_DUMP(TAG, "ma    : %s", ONOFF(st_set.flags.ma_connected));
   TION_DUMP(TAG, "preset: %s", ONOFF(st_set.flags.preset_state));
+
+  // auto_state невозможно получить от бризера
+  this->state_.auto_state = st_set.flags.ma_auto;
 
   return this->write_frame(FRAME_TYPE_REQ(FRAME_TYPE_STATE_SET), st_set);
 }
@@ -253,7 +256,8 @@ void Tion3sApi::update_state_(const tion_3s::tion3s_state_t &state) {
   this->state_.sound_state = state.flags.sound_state;
   // this->state_.led_state = state.led_state;
   // this->state_.comm_source = state.comm_source;
-  this->state_.auto_state = state.flags.ma_connected;
+  // auto_state устанавливается в write_state_
+  // this->state_.auto_state = state.flags.ma_connected;
   this->state_.filter_state = state.filter_time <= 30;
   this->state_.gate_error_state = state.last_error == tion_3s::tion3s_state_t::GATE_ERROR_NUM;
   this->state_.gate_position =                                                  //-//

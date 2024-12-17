@@ -26,7 +26,7 @@ class Tion3sApi : public TionApiBase, public tion::TionApiWriter {
 
  protected:
   bool request_state_() const;
-  bool write_state_(const tion::TionState &state) const;
+  bool write_state_(const tion::TionState &state);
   bool reset_filter_(const tion::TionState &state) const;
   bool factory_reset_(const tion::TionState &state) const;
 
