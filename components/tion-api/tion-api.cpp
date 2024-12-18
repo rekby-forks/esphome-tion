@@ -236,8 +236,14 @@ TionState TionApiBase::make_write_state_(TionStateCall *call) const {
   if (call->get_target_temperature().has_value()) {
     const auto target_temperature = *call->get_target_temperature();
     if (cs.target_temperature != target_temperature) {
-      TION_LOGD(TAG, "New target temperature %d -> %d", cs.target_temperature, target_temperature);
-      ns.target_temperature = target_temperature;
+      if (target_temperature < this->traits_.min_target_temperature ||
+          target_temperature > this->traits_.max_target_temperature) {
+        TION_LOGW(TAG, "Target temperature is out of range %d:%d °C", this->traits_.min_target_temperature,
+                  this->traits_.max_target_temperature);
+      } else {
+        TION_LOGD(TAG, "New target temperature %d -> %d", cs.target_temperature, target_temperature);
+        ns.target_temperature = target_temperature;
+      }
     }
   }
 
@@ -462,7 +468,7 @@ void TionApiBase::set_boost_target_temperature(int8_t target_temperature) {
   if (this->traits_.boost_target_temperature != target_temperature) {
     if (target_temperature < this->traits_.min_target_temperature ||
         target_temperature > this->traits_.max_target_temperature) {
-      TION_LOGD(TAG, "Boost target temperature is out of range %d:%d °C", this->traits_.min_target_temperature,
+      TION_LOGW(TAG, "Boost target temperature is out of range %d:%d °C", this->traits_.min_target_temperature,
                 this->traits_.max_target_temperature);
       return;
     }
