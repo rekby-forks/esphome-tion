@@ -1,0 +1,6 @@
+substitutions:
+  tx_pin: GPIO13
+  rx_pin: GPIO12
+
+packages:
+  seeed_c6.int: !include seeed_c6.yaml
