@@ -1,5 +1,7 @@
 substitutions:
+  tion_conn: uart
   board: esp01_1m
+  board_code: $board
   tx_pin: TX
   rx_pin: RX
   baud_rate: "115200"
