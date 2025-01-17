@@ -30,6 +30,9 @@ class TionLtUartProtocol : public tion::TionUartProtocolBase<45> {
     uint32_t filter_time;
     uint32_t airflow_counter;
   } t_data{};
+
+  uint32_t busy_{};
+
   /// Reads a frame starting with size for hw uart or continue reading for sw uart
   read_frame_result_t read_frame_(tion::TionUartReader *io);
 

@@ -110,6 +110,7 @@ static const char *const CMD_SET_PID = "set_pid\r\n";
 // результат работы команды неизвестен, команде требуются какие-то параметры
 static const char *const CMD_GET_PID = "get_pid\r\n";
 
+#define ST_SW_MODE "Switching Mode"
 #define ST_MODE "Current Mode: "
 #define ST_SPEED "Speed: "
 #define ST_SENS "Sensors T_set: "
@@ -176,7 +177,9 @@ TionLtUartProtocol::read_frame_result_t TionLtUartProtocol::read_frame_(tion::Ti
 
   auto *str = reinterpret_cast<const char *>(this->buf_);
   TION_LT_TRACE(TAG, "RX: %s", str);
-  if (std::strncmp(str, ST_MODE, sizeof(ST_MODE) - 1) == 0) {
+  if (this->busy_ > 0) {
+    TION_LT_TRACE(TAG, "write command in progress: %" PRIu32, this->busy_);
+  } else if (std::strncmp(str, ST_MODE, sizeof(ST_MODE) - 1) == 0) {
     // StandBy or Work
     str = str + sizeof(ST_MODE) - 1;
     this->t_data.power_state = *str == 'W';  // "W" - is a first of "Work"
@@ -265,6 +268,10 @@ TionLtUartProtocol::read_frame_result_t TionLtUartProtocol::read_frame_(tion::Ti
     };
     TION_LT_DUMP(TAG, "Got frm : %04X", frame.data.firmware_version);
     this->reader(*reinterpret_cast<const tion::tion_any_frame_t *>(&frame), sizeof(frame));
+  } else if (std::strncmp(str, ST_MAC, sizeof(ST_MAC) - 1) == 0) {
+    // just do nothings, we don't need MAC address now
+  } else if (std::strncmp(str, ST_SW_MODE, sizeof(ST_SW_MODE) - 1) == 0) {
+    // just do nothings, skip "Switching Mode" string
   } else {
     TION_LOGW(TAG, "Unsupported: %s", this->buf_);
   }
@@ -312,38 +319,32 @@ bool TionLtUartProtocol::write_frame(uint16_t type, const void *data, size_t siz
         return false;
       }
 
-      bool has_changes = false;
+      this->busy_++;
 
       if (this->t_data.fan_speed != set.fan_speed) {
         this->write_cmd_(CMD_SET_SPEED, static_cast<int8_t>(set.fan_speed));
-        has_changes = true;
       }
       if (this->t_data.target_temperature != set.target_temperature) {
         this->write_cmd_(CMD_SET_TEMP, set.target_temperature);
-        has_changes = true;
       }
       if (this->t_data.heater_state != set.heater_state) {
         this->write_cmd_(set.heater_state ? CMD_SET_HEATER_ON : CMD_SET_HEATER_OFF);
-        has_changes = true;
       }
       if (this->t_data.sound_state != set.sound_state) {
         // команду можем выполнить, но состояние прочитать не можем
         this->write_cmd_(set.sound_state ? CMD_SET_SOUND_STATE_ON : CMD_SET_SOUND_STATE_OFF);
-        has_changes = true;
       }
       if (this->t_data.led_state != set.led_state) {
         // команду можем выполнить, но состояние прочитать не можем
         this->write_cmd_(set.led_state ? CMD_SET_LED_STATE_ON : CMD_SET_LED_STATE_OFF);
-        has_changes = true;
       }
       if (this->t_data.power_state != set.power_state) {
         this->write_cmd_(set.power_state ? CMD_POWER_ON : CMD_POWER_OFF);
-        has_changes = true;
       }
 
-      if (!has_changes) {
-        this->write_cmd_(CMD_GET_STATE);
-      }
+      this->busy_--;
+
+      this->write_cmd_(CMD_GET_STATE);
 
       return true;
     }
